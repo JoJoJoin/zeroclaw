@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { MemoryEntry } from '@/types/api';
 import { getMemory, storeMemory, deleteMemory } from '@/lib/api';
+import { t } from '@/lib/i18n';
 
 function truncate(text: string, max: number): string {
   if (text.length <= max) return text;
@@ -60,7 +61,7 @@ export default function Memory() {
 
   const handleAdd = async () => {
     if (!formKey.trim() || !formContent.trim()) {
-      setFormError('Key and content are required.');
+      setFormError(t('memory.key_content_required'));
       return;
     }
     setSubmitting(true);
@@ -98,7 +99,7 @@ export default function Memory() {
     return (
       <div className="p-6">
         <div className="rounded-lg bg-red-900/30 border border-red-700 p-4 text-red-300">
-          Failed to load memory: {error}
+          {t('memory.load_error')}: {error}
         </div>
       </div>
     );
@@ -111,7 +112,7 @@ export default function Memory() {
         <div className="flex items-center gap-2">
           <Brain className="h-5 w-5 text-blue-400" />
           <h2 className="text-base font-semibold text-white">
-            Memory ({entries.length})
+            {t('memory.title')} ({entries.length})
           </h2>
         </div>
         <button
@@ -119,7 +120,7 @@ export default function Memory() {
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           <Plus className="h-4 w-4" />
-          Add Memory
+          {t('memory.add_memory')}
         </button>
       </div>
 
@@ -132,7 +133,7 @@ export default function Memory() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Search memory entries..."
+            placeholder={t('memory.search_entries')}
             className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -143,7 +144,7 @@ export default function Memory() {
             onChange={(e) => setCategoryFilter(e.target.value)}
             className="bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-8 py-2.5 text-sm text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
           >
-            <option value="">All Categories</option>
+            <option value="">{t('memory.all_cat')}</option>
             {categories.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
@@ -155,7 +156,7 @@ export default function Memory() {
           onClick={handleSearch}
           className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
         >
-          Search
+          {t('common.search')}
         </button>
       </div>
 
@@ -171,7 +172,7 @@ export default function Memory() {
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md mx-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Add Memory</h3>
+              <h3 className="text-lg font-semibold text-white">{t('memory.add_memory')}</h3>
               <button
                 onClick={() => {
                   setShowForm(false);
@@ -192,7 +193,7 @@ export default function Memory() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Key <span className="text-red-400">*</span>
+                  {t('memory.key_required')} <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -204,7 +205,7 @@ export default function Memory() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Content <span className="text-red-400">*</span>
+                  {t('memory.content_required')} <span className="text-red-400">*</span>
                 </label>
                 <textarea
                   value={formContent}
@@ -216,7 +217,7 @@ export default function Memory() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Category (optional)
+                  {t('memory.category_optional')}
                 </label>
                 <input
                   type="text"
@@ -243,7 +244,7 @@ export default function Memory() {
                 disabled={submitting}
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50"
               >
-                {submitting ? 'Saving...' : 'Save'}
+                {submitting ? t('memory.saving') : t('common.save')}
               </button>
             </div>
           </div>
@@ -258,7 +259,7 @@ export default function Memory() {
       ) : entries.length === 0 ? (
         <div className="bg-gray-900 rounded-xl border border-gray-800 p-8 text-center">
           <Brain className="h-10 w-10 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400">No memory entries found.</p>
+          <p className="text-gray-400">{t('memory.no_entries')}</p>
         </div>
       ) : (
         <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-x-auto">
@@ -266,19 +267,19 @@ export default function Memory() {
             <thead>
               <tr className="border-b border-gray-800">
                 <th className="text-left px-4 py-3 text-gray-400 font-medium">
-                  Key
+                  {t('memory.key_required')}
                 </th>
                 <th className="text-left px-4 py-3 text-gray-400 font-medium">
-                  Content
+                  {t('memory.content_required')}
                 </th>
                 <th className="text-left px-4 py-3 text-gray-400 font-medium">
-                  Category
+                  {t('memory.category')}
                 </th>
                 <th className="text-left px-4 py-3 text-gray-400 font-medium">
-                  Timestamp
+                  {t('memory.timestamp')}
                 </th>
                 <th className="text-right px-4 py-3 text-gray-400 font-medium">
-                  Actions
+                  {t('common.actions')}
                 </th>
               </tr>
             </thead>

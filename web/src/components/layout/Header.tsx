@@ -1,8 +1,6 @@
 import { useLocation } from 'react-router-dom';
-import { LogOut } from 'lucide-react';
 import { t } from '@/lib/i18n';
 import { useLocaleContext } from '@/App';
-import { useAuth } from '@/hooks/useAuth';
 
 const routeTitles: Record<string, string> = {
   '/': 'nav.dashboard',
@@ -19,15 +17,18 @@ const routeTitles: Record<string, string> = {
 
 export default function Header() {
   const location = useLocation();
-  const { logout } = useAuth();
   const { locale, setAppLocale } = useLocaleContext();
 
   const titleKey = routeTitles[location.pathname] ?? 'nav.dashboard';
   const pageTitle = t(titleKey);
 
-  const toggleLanguage = () => {
-    setAppLocale(locale === 'en' ? 'tr' : 'en');
+  const cycleLanguage = () => {
+    const order = ['en', 'zh', 'tr'] as const;
+    const idx = order.indexOf(locale as typeof order[number]);
+    setAppLocale(order[(idx + 1) % order.length]);
   };
+
+  const localeLabel: Record<string, string> = { en: 'EN', zh: '中文', tr: 'TR' };
 
   return (
     <header className="h-14 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-6">
@@ -39,20 +40,10 @@ export default function Header() {
         {/* Language switcher */}
         <button
           type="button"
-          onClick={toggleLanguage}
+          onClick={cycleLanguage}
           className="px-3 py-1 rounded-md text-sm font-medium border border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
         >
-          {locale === 'en' ? 'EN' : 'TR'}
-        </button>
-
-        {/* Logout */}
-        <button
-          type="button"
-          onClick={logout}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
-        >
-          <LogOut className="h-4 w-4" />
-          <span>{t('auth.logout')}</span>
+          {localeLabel[locale] ?? 'EN'}
         </button>
       </div>
     </header>
